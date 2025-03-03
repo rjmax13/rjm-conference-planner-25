@@ -3,6 +3,7 @@ import "./ConferenceEvent.css";
 import TotalCost from "./TotalCost";
 import { useSelector, useDispatch } from "react-redux";
 import { incrementQuantity, decrementQuantity } from "./venueSlice";
+import { decrementAvQuantity, incrementAvQuantity } from "./avSlice";
 const ConferenceEvent = () => {
     const [showItems, setShowItems] = useState(false);
     const [numberOfPeople, setNumberOfPeople] = useState(1);
@@ -30,9 +31,11 @@ const ConferenceEvent = () => {
         }
       };
     const handleIncrementAvQuantity = (index) => {
+        dispatch(incrementAvQuantity(index))
     };
 
     const handleDecrementAvQuantity = (index) => {
+        dispatch(decrementAvQuantity(index))
     };
 
     const handleMealSelection = (index) => {
@@ -54,10 +57,17 @@ const ConferenceEvent = () => {
           venueItems.forEach((item) => {
             totalCost += item.cost * item.quantity;
           });
+        }else {
+            if (section === 'av') {
+                avItems.forEach((item) => {
+                    totalCost += item.cost * item.quantity
+                })
+            }
         }
         return totalCost;
       };
     const venueTotalCost = calculateTotalCost("venue");
+    const avTotalCost = calculateTotalCost("av")
 
     const navigateToProducts = (idType) => {
         if (idType == '#venue' || idType == '#addons' || idType == '#meals') {
@@ -168,13 +178,14 @@ const ConferenceEvent = () => {
                                             <div className="addons_btn">
                                                 <button className="btn-warning" onClick={() => handleDecrementAvQuantity(index) }> &ndash; </button>
                                                 <span className="quantity-value"> {item.quantity} </span>
-                                                <button className="btn-success" onClick={()=>handleIncrementAvQuantity(indes)} > &#43; </button>
+                                                <button className="btn-success" onClick={()=>handleIncrementAvQuantity(index)} > &#43; </button>
                                             </div>
                                         </div>
                                     ))}
 
                                 </div>
-                                <div className="total_cost">Total Cost:</div>
+                                <div className="total_cost">Total Cost: ${avTotalCost} </div>
+                                
 
                             </div>
 
